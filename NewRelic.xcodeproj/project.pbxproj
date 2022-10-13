@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		711772DB28F77A8000002D10 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711772DA28F77A8000002D10 /* Coordinator.swift */; };
+		711772DE28F77AC900002D10 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711772DD28F77AC900002D10 /* MainCoordinator.swift */; };
+		711772E028F77AF600002D10 /* ViewControllerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711772DF28F77AF600002D10 /* ViewControllerProvider.swift */; };
+		711772E228F8526800002D10 /* CatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711772E128F8526800002D10 /* CatsViewModel.swift */; };
+		711772E428F8547B00002D10 /* Variable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711772E328F8547B00002D10 /* Variable.swift */; };
+		711772E728F86E9700002D10 /* CatsAPIResponseTimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711772E628F86E9700002D10 /* CatsAPIResponseTimeManager.swift */; };
 		C9BBC5E924E8EE6100F4C7D7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BBC5E824E8EE6100F4C7D7 /* AppDelegate.swift */; };
 		C9BBC5EB24E8EE6100F4C7D7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BBC5EA24E8EE6100F4C7D7 /* SceneDelegate.swift */; };
 		C9BBC5F024E8EE6100F4C7D7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9BBC5EE24E8EE6100F4C7D7 /* Main.storyboard */; };
@@ -34,6 +40,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		711772DA28F77A8000002D10 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		711772DD28F77AC900002D10 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		711772DF28F77AF600002D10 /* ViewControllerProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerProvider.swift; sourceTree = "<group>"; };
+		711772E128F8526800002D10 /* CatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatsViewModel.swift; sourceTree = "<group>"; };
+		711772E328F8547B00002D10 /* Variable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variable.swift; sourceTree = "<group>"; };
+		711772E628F86E9700002D10 /* CatsAPIResponseTimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatsAPIResponseTimeManager.swift; sourceTree = "<group>"; };
 		C9BBC5E524E8EE6100F4C7D7 /* NewRelic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewRelic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9BBC5E824E8EE6100F4C7D7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9BBC5EA24E8EE6100F4C7D7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +84,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		711772DC28F77A8600002D10 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				C9BBC5E824E8EE6100F4C7D7 /* AppDelegate.swift */,
+				C9BBC5EA24E8EE6100F4C7D7 /* SceneDelegate.swift */,
+				711772DA28F77A8000002D10 /* Coordinator.swift */,
+				711772DD28F77AC900002D10 /* MainCoordinator.swift */,
+				711772DF28F77AF600002D10 /* ViewControllerProvider.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		711772E528F8548100002D10 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				711772E328F8547B00002D10 /* Variable.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		C9BBC5DC24E8EE6100F4C7D7 = {
 			isa = PBXGroup;
 			children = (
@@ -93,12 +125,12 @@
 		C9BBC5E724E8EE6100F4C7D7 /* NewRelic */ = {
 			isa = PBXGroup;
 			children = (
+				711772DC28F77A8600002D10 /* Navigation */,
 				C9BBC62B24E9246200F4C7D7 /* MetricsScene */,
 				C9BBC61324E8F59800F4C7D7 /* Network */,
 				C9BBC61224E8F36B00F4C7D7 /* AllCats */,
 				C9BBC61D24E906F900F4C7D7 /* CatDetails */,
-				C9BBC5E824E8EE6100F4C7D7 /* AppDelegate.swift */,
-				C9BBC5EA24E8EE6100F4C7D7 /* SceneDelegate.swift */,
+				711772E528F8548100002D10 /* Helpers */,
 				C9BBC5EE24E8EE6100F4C7D7 /* Main.storyboard */,
 				C9BBC5F124E8EE6400F4C7D7 /* Assets.xcassets */,
 				C9BBC5F324E8EE6400F4C7D7 /* LaunchScreen.storyboard */,
@@ -121,6 +153,8 @@
 			children = (
 				C9BBC60A24E8EFD600F4C7D7 /* AllCatsViewController.swift */,
 				C9BBC61B24E9019F00F4C7D7 /* CatTableViewCell.swift */,
+				711772E128F8526800002D10 /* CatsViewModel.swift */,
+				711772E628F86E9700002D10 /* CatsAPIResponseTimeManager.swift */,
 			);
 			path = AllCats;
 			sourceTree = "<group>";
@@ -253,12 +287,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				711772E028F77AF600002D10 /* ViewControllerProvider.swift in Sources */,
 				C9BBC61C24E9019F00F4C7D7 /* CatTableViewCell.swift in Sources */,
+				711772E728F86E9700002D10 /* CatsAPIResponseTimeManager.swift in Sources */,
+				711772DE28F77AC900002D10 /* MainCoordinator.swift in Sources */,
+				711772E228F8526800002D10 /* CatsViewModel.swift in Sources */,
+				711772E428F8547B00002D10 /* Variable.swift in Sources */,
 				C9BBC60B24E8EFD600F4C7D7 /* AllCatsViewController.swift in Sources */,
 				C9BBC5E924E8EE6100F4C7D7 /* AppDelegate.swift in Sources */,
 				C9BBC61F24E9072100F4C7D7 /* CatDetailsViewController.swift in Sources */,
 				C9BBC61724E8F91100F4C7D7 /* CatFetcher.swift in Sources */,
 				C9BBC61524E8F5EA00F4C7D7 /* CatList.swift in Sources */,
+				711772DB28F77A8000002D10 /* Coordinator.swift in Sources */,
 				C9BBC5EB24E8EE6100F4C7D7 /* SceneDelegate.swift in Sources */,
 				F6A1959625D2E13D0091662C /* CatDetailTableViewCell.swift in Sources */,
 				C9BBC63924E9290C00F4C7D7 /* MetricsTableViewCell.swift in Sources */,

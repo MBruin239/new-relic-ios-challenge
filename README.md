@@ -1,47 +1,39 @@
 # New Relic Code Challenge
 
-## Summary
-We have provided you with a skeleton app that displays a scrollable list of cat breeds. Modify and improve the skeleton app to get closer to production-ready. The app should efficiently show a very long list, and selecting an entry in the list should display more information. The user should be able to navigate back and forth between views. The app should capture performance information and display to another view.
+## Assumptions
+Kept the existing UI the same as I interupted it to look.
+Download all the cats in batches of 30 at the start(The UI updates when each batch returns), instead of scrolling to download more.
+I added a footer with an activity indicator instead of using the ones on the cells. I didn't remove that but could in the future.
 
-## Primary Considerations
-* Consider user experience and loading time of that experience.
-* The design should be resilient with regard to network connectivity loss.
-* Let the user know you are fetching/waiting for data.
-* The App and its responsiveness should be optimized for maximum performance and resource usage.
 
-We are not concerned with the visual aesthetics of the app, as long as the interface is clear and usable. Do not spend time polishing the visual aspects such as autolayout, fonts, color, accessibility, etc. Please update the architecture where needed, 
+## Navigation
 
-App should be as close to production-ready as possible.
-Consider the possibility of adding future unit tests when writing the code.
+### Using the coordinator pattern:
+Create a main coordinator that will control our app flow, starting it when our app launches.
 
-The app should work correctly as defined below in [](#Requirements).
+### Coordinator:
+A property to store the navigation controller that’s being used to present view controllers. Using a navigation controller is the easiest way to present view controllers.
+A start() method to make the coordinator take control. This allows us to create a coordinator fully and activate it only when we’re ready.
+The MainCoordinator is where there are functions to push view controllers onto the navigation controller.
 
-The code of the app should be descriptive and easy to read, and the build method and runtime parameters must be well-described and work.
+### SceneDelegate:
+Modify didFinishLaunchingWithOptions so that it configures and starts our main coordinator, and also sets up a basic window for our app. That basic window is normally done by the storyboard, but it’s our responsibility.
 
-## Requirements
-Present a pageable main scrollable text list view that displays names of cats. The data should be fetched on demand in batches of *30*.
-Use the Cat Facts API to download facts about cats (https://catfact.ninja)
+### ViewControllerProvider:
+An enum for getting new view controllers. Currently setup for the AllCatsViewController, CatDetailsViewController, and MetricsViewController.
 
-Tapping cat names should display additional detail about the cat. For each network call, you capture the response time of that call. You track the average response time per API endpoint. Display these metrics and metadata in the Metrics view. Each API called during this run and average response time in milliseconds
-* Device make/model
-* OS version
 
-User can navigate between all views.
+## ViewModel
 
-Remove or keep as much of the skeleton code as you wish. You can start from scratch and create your own app as well. 
+### CatsViewModel
+Contains a cats variable and an allCatsDownloaded variable that are setup to trigger closures on update.
+Call the requestAllCats function to start collecting the cat details. 
+The requestMoreCats function calls itself recursively until the web call returns 0 cats.
 
-Use the latest version of Xcode.
+#### Variable:
+A class that holds a value and calls a closure when the value is set.
+The value member of this class can be used to store just about anything. When value is changed it has a didset that calls the onUpdate closure. 
+The onUpdate closure should be defined wherever you want to inform that the value was updated.
 
-# Notes
-You may use common libraries in your project, particularly if their use helps improve Application simplicity and readability. Please update the README with any additional details and and setup instructions.
-
-# Submission
-We'll test your solution using the latest production version of the XCode and command line tools.
-
-Sanitize the source files to remove your name from comments
-- Include a README in the repo with comments:
-- Clearly state all of the assumptions you made in completing the app
-- If your project requires any components not found in a default install of the developer tool, you must provide instructions (and automation) to install those components (or include them in your archive).
-- Any additional special instructions to set up and run project
-- Push the code to a github.com repo and invite the user specified in the email.
-
+### CatsAPIResponseTimeManager
+A simple class that holds an array of times and has a function to get their average.

@@ -15,6 +15,7 @@ struct MetricsAttribute {
 }
 
 class MetricsViewController: UIViewController {
+    var metricDetailsTableArray = [MetricsAttribute]()
     
     @IBOutlet weak var tableView: UITableView!
 
@@ -30,6 +31,19 @@ class MetricsViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.bounces = false
     }
+    
+    // Function to set the metric information for the table view
+    public func setMetricDetails(averageTime: Millisecond) {
+        metricDetailsTableArray.removeAll()
+        
+        let systemVersion = UIDevice.current.systemVersion
+        let model = UIDevice.current.name
+        
+        metricDetailsTableArray.append(MetricsAttribute(label: "AVG HTTP Response Time", value: String(averageTime) + " " + "milliseconds"))
+        metricDetailsTableArray.append(MetricsAttribute(label: "Make/Model", value: model))
+        metricDetailsTableArray.append(MetricsAttribute(label: "OS Version", value: systemVersion))
+
+    }
 }
 
 extension MetricsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -40,13 +54,15 @@ extension MetricsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
         // average response time, make/model, os version => 3
-        return 3
+        return metricDetailsTableArray.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MetricsCell", for: indexPath) as? MetricsTableViewCell
-        cell?.configure(MetricsAttribute(label: "avg http response time", value: "value"))
-        return cell!
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MetricsCell", for: indexPath) as? MetricsTableViewCell else { return UITableViewCell() }
+
+        cell.configure(metricDetailsTableArray[indexPath.row])
+        cell.selectionStyle = .none
+        return cell
     }
 }

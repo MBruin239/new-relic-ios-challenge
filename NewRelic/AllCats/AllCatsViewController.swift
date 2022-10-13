@@ -9,52 +9,61 @@
 import UIKit
 
 class AllCatsViewController: UIViewController {
+    var coordinator: MainCoordinator?
+    
+    var viewModel = CatsViewModel()
 
     @IBOutlet weak var tableView: UITableView!
     
-    var cats: [CatDetail]?
-    var downloadState: DownloadState = .downloading
+    var downloadState: DownloadState = .downloading { didSet {
+        switch downloadState {
+        case .downloading:
+            self.tableView.tableFooterView?.isHidden = false
+        case .done:
+            self.tableView.tableFooterView?.isHidden = true
+        }
+    }}
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 140
-
+        
+        // An activity indicator to indicate the the cats are still downloading
+        let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
+        spinner.startAnimating()
+        spinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
+        self.tableView.tableFooterView = spinner
+        
         // Do any additional setup after loading the view.
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "Metrics", style: .plain, target: self, action: #selector(self.rightButtonTapped(sender:)))
+        
+        // Closure for when all the cats are done dowloading
+        viewModel.allCatsDownloaded.onUpdate = { [weak self] _ in
+            self?.downloadState = .done
+            self?.tableView.reloadData()
+        }
+        // Closure for when the cats array is updated
+        viewModel.cats.onUpdate = { [weak self] _ in
+            self?.tableView.reloadData()
+        }
 
-        cats = Array(repeating: CatDetail(breed: "", country: "", origin: "", coat: "", pattern: ""), count: 60)
+        // start downloading all the cats
         requestAllCats()
     }
     
-    @objc func rightButtonTapped(sender: UIBarButtonItem) {
-        let board = UIStoryboard(name: "Main", bundle: nil)
-        let metricsView = board.instantiateViewController(withIdentifier: "MetricsViewController")
-        if let metricsView = metricsView as? MetricsViewController {
-            navigationController?.pushViewController(metricsView, animated: true)
-        }
-        return
-    }
+    // A function to request the cats in the view controller
     func requestAllCats() {
-        /*
-        guard cats == nil else {
-            print("cats already loaded")
-            return
-        }
-        */
-        let queue = DispatchQueue.main
+        downloadState = .downloading
         
-        let dataCallback = { [weak self] (cats: CatResult?) in
-            DispatchQueue.main.async {
-                self?.downloadState = .done
-                self?.cats = cats?.data
-                self?.tableView.reloadData()
-            }
-        }
-        CatFetcher.shared.loadCats(perPage: 400, page: 0, queue: queue, callback: dataCallback)
+        viewModel.requestAllCats()
+    }
+    
+    @objc func rightButtonTapped(sender: UIBarButtonItem) {
+        coordinator?.showMetricsViewController(averageTime: viewModel.catTimeManager.getAverageTimes())
     }
 }
 
@@ -65,28 +74,25 @@ extension AllCatsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        guard let cats = cats else {
-            return 0
-        }
-        return cats.count
+        return viewModel.cats.value.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CatCell", for: indexPath) as? CatTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CatCell", for: indexPath) as? CatTableViewCell else { return UITableViewCell() }
+        
+        let cat = viewModel.cats.value[indexPath.row]
+        let breed = cat.breed
+        
+        cell.configure(name: breed, state: .done)
 
-        if let breed = cats?[indexPath.row].breed {
-            cell?.configure(name: breed, state: downloadState)
-        }
-        cell?.selectionStyle = .none
-        return cell!
+        cell.selectionStyle = .none
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let board = UIStoryboard(name: "Main", bundle: nil)
-        let detailsView = board.instantiateViewController(withIdentifier: "CatDetailsViewController")
-        if let detailsView = detailsView as? CatDetailsViewController {
-            navigationController?.pushViewController(detailsView, animated: true)
-        }
+        let cat = viewModel.cats.value[indexPath.row]
+        self.coordinator?.showCatDetailsViewController(catDetail: cat)
     }
+
 }

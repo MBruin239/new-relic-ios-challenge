@@ -14,7 +14,11 @@ struct CatAttribute {
     let label: String
     let value: String
 }
+
 class CatDetailsViewController: UIViewController {
+
+    var catDetail: CatDetail?
+    var catDetailTableArray = [CatAttribute]()
         
     @IBOutlet weak var tableView: UITableView!
     
@@ -28,23 +32,38 @@ class CatDetailsViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.bounces = false
     }
+    
+    // Function to setup the cat details table
+    public func setCatDetails(catDetail: CatDetail) {
+        self.catDetail = catDetail
+        catDetailTableArray.removeAll()
+        
+        catDetailTableArray.append(CatAttribute(label: "Breed", value: catDetail.breed))
+        catDetailTableArray.append(CatAttribute(label: "Country", value: catDetail.country))
+        catDetailTableArray.append(CatAttribute(label: "Origin", value: catDetail.origin))
+        catDetailTableArray.append(CatAttribute(label: "Coat", value: catDetail.coat))
+        catDetailTableArray.append(CatAttribute(label: "Pattern", value: catDetail.pattern))
+        
+    }
 }
 
 extension CatDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
         // breed, country, origin, coat, pattern => 5
-        return 5
+        return catDetailTableArray.count
     }
+    
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CatDetailCell", for: indexPath) as? CatDetailTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CatDetailCell", for: indexPath) as? CatDetailTableViewCell else { return UITableViewCell() }
         
-        cell?.configure(CatAttribute(label: "breed", value: "value"))
-        cell?.selectionStyle = .none
-        return cell!
+        cell.configure(catDetailTableArray[indexPath.row])
+        cell.selectionStyle = .none
+        return cell
     }
 }
