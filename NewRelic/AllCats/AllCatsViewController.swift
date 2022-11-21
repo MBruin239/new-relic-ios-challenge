@@ -50,6 +50,16 @@ class AllCatsViewController: UIViewController {
         viewModel.cats.onUpdate = { [weak self] _ in
             self?.tableView.reloadData()
         }
+        // Closure for an error in the network call, shows an alert to try again.
+        viewModel.error.onUpdate = { [weak self] _ in
+            guard let error = self?.viewModel.error.value else { return }
+            print(error as Any)
+            let alert = UIAlertController(title: "Alert", message: error.localizedDescription, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Try Again", style: UIAlertAction.Style.default, handler: { [weak self]_ in
+                self?.requestAllCats()
+            }))
+            self?.present(alert, animated: true, completion: nil)
+        }
 
         // start downloading all the cats
         requestAllCats()
@@ -63,7 +73,7 @@ class AllCatsViewController: UIViewController {
     }
     
     @objc func rightButtonTapped(sender: UIBarButtonItem) {
-        coordinator?.showMetricsViewController(averageTime: viewModel.catTimeManager.getAverageTimes())
+        coordinator?.showMetricsViewController(timesManager: viewModel.catTimeManager)
     }
 }
 

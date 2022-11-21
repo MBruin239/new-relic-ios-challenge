@@ -39,23 +39,27 @@ class CatFetcher: NSObject {
     ///               `DispatchQueue.main`.
     ///   - callback: The callback that will be invoked with the list of places or an empty Array in
     ///               case of an error.
-    func loadCats(perPage: Int, page: Int, queue: DispatchQueue = .main, callback: @escaping (CatResult?) -> Void) {
+    func loadCats(perPage: Int, page: Int, queue: DispatchQueue = .main, callback: @escaping (Result<[CatDetail], Error>, (URL?)) -> Void) {
         
         let request = buildCatFactRequest(perPage: perPage, page: page)
         
         let task = urlSession?.dataTask(with: request) { data, response, err in
-            let result: CatResult?
-            
-            if let data = data, err == nil {
-                let decoder = JSONDecoder()
-                
-                result = (try? decoder.decode(CatResult.self, from: data)) ?? nil
-            } else {
-                result = nil
+            guard err == nil else {
+                queue.async {
+                    callback(.failure(err!), response?.url)
+                }
+                return
             }
             
-            queue.async {
-                callback(result)
+            do {
+                let result = try JSONDecoder().decode(CatResult.self, from: data!)
+                queue.async {
+                    callback(.success(result.data), response?.url)
+                }
+            } catch {
+                queue.async {
+                    callback(.failure(err!), response?.url)
+                }
             }
         }
         

@@ -33,9 +33,10 @@ class MetricsViewController: UIViewController {
     }
     
     // Function to set the metric information for the table view
-    public func setMetricDetails(averageTime: Millisecond) {
+    public func setMetricDetails(timesManager: CatsAPIResponseTimeManager) {
         metricDetailsTableArray.removeAll()
         
+        let averageTime = timesManager.getAverageTimes()
         let systemVersion = UIDevice.current.systemVersion
         let model = UIDevice.current.name
         
@@ -43,6 +44,9 @@ class MetricsViewController: UIViewController {
         metricDetailsTableArray.append(MetricsAttribute(label: "Make/Model", value: model))
         metricDetailsTableArray.append(MetricsAttribute(label: "OS Version", value: systemVersion))
 
+        for time in timesManager.times {
+            metricDetailsTableArray.append(MetricsAttribute(label: time.url, value: String(time.time)))
+        }
     }
 }
 

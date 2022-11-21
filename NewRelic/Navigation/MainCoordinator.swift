@@ -30,8 +30,8 @@ class MainCoordinator: Coordinator {
     }
     
     // Called to show the metrics view controller
-    func showMetricsViewController(averageTime: Millisecond) {
-        let vc = ViewControllerProvider.metricsViewController(averageTime: averageTime)
+    func showMetricsViewController(timesManager: CatsAPIResponseTimeManager) {
+        let vc = ViewControllerProvider.metricsViewController(timesManager: timesManager)
         navigationController.pushViewController(vc, animated: true)
     }
 }

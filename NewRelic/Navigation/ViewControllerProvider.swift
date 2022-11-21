@@ -26,11 +26,11 @@ enum ViewControllerProvider {
     }
     
     // Provides a MetricsViewController
-    static func metricsViewController(averageTime: Millisecond) -> MetricsViewController {
+    static func metricsViewController(timesManager: CatsAPIResponseTimeManager) -> MetricsViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "MetricsViewController") as! MetricsViewController
         
-        viewController.setMetricDetails(averageTime: averageTime)
+        viewController.setMetricDetails(timesManager: timesManager)
         return viewController
     }
 }
